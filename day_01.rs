@@ -1,9 +1,12 @@
+
 fn main() {
     let raw_input = std::fs::read_to_string("./input_01.txt").expect("failed to read input");
     let input: Vec<&str> = raw_input.lines().collect();
     let mut elves: Vec<i64> = input.split(|s| s.is_empty())
-                .map(|elf| elf.iter().map(|s| s.parse::<i64>().expect("no snack"))
-                                .sum())
+                .map(|elf|
+                    elf.iter()
+                       .map(|s| s.parse::<i64>().expect("no snack"))
+                       .sum())
                 .collect();
     let task1 = elves.iter().max().expect("Couldn't find max");
     println!("Task 1: {}", task1);
