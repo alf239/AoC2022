@@ -1,13 +1,6 @@
 fn score(c: char) -> u32 {
-    match c {
-        'A' => 1,
-        'B' => 2,
-        'C' => 3,
-        'X' => 1,
-        'Y' => 2,
-        'Z' => 3,
-        _ => 0
-    }
+    let base = (if c > 'C' { 'X' } else { 'A' }) as u32;
+    (c as u32) - base + 1
 }
 
 fn side(s: &str, idx: usize) -> u32 {
