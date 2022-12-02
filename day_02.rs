@@ -10,36 +10,51 @@ fn score(c: char) -> u32 {
     }
 }
 
+fn side(s: &str, idx: usize) -> u32 {
+    score(s.chars().nth(idx).unwrap())
+}
+
+fn you(s: &str) -> u32 {
+    side(s, 2)
+}
+
+fn elf(s: &str) -> u32 {
+    side(s, 0)
+}
+
 fn outcome1(s: &str) -> u32 {
-    let you = score(s.chars().nth(2).unwrap());
-    let elf = score(s.chars().nth(0).unwrap());
-    let round = if you == elf {
+    let y = you(s);
+    let e = elf(s);
+    let round = if y == e {
         3
-    } else if you % 3 == (elf + 1) % 3 {
+    } else if y % 3 == (e + 1) % 3 {
         6
     } else {
         0
     };
-    you + round
+    y + round
 }
 
 fn outcome2(s: &str) -> u32 {
-    let you = s.chars().nth(2).unwrap();
-    let elf = score(s.chars().nth(0).unwrap());
-    match you {
-        'X' => (elf + 1) % 3 + 1, 
-        'Y' => 3 + elf,
-        'Z' => 6 + elf % 3 + 1,
+    let e = elf(s);
+    match you(s) {
+        1 => (e + 1) % 3 + 1, 
+        2 => 3 + e,
+        3 => 6 + e % 3 + 1,
         _ => 0
     }
+}
+
+fn final_score(input: &[&str], f: fn(&&str) -> u32) -> u32 {
+    input.iter().map(f).sum()
 }
 
 fn main() {
     let raw_input = std::fs::read_to_string("./input_02.txt").expect("failed to read input");
     let input: Vec<&str> = raw_input.lines().collect();
-    let task1: u32 = input.iter().map(|s| outcome1(s)).sum();
+    let task1: u32 = final_score(input.as_slice(), |s| outcome1(s));
     println!("Task 1: {}", task1);
 
-    let task2: u32 = input.iter().map(|s| outcome2(s)).sum();
+    let task2: u32 = final_score(input.as_slice(), |s| outcome2(s));
     println!("Task 2: {}", task2);
 }
