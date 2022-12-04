@@ -9,7 +9,7 @@ example = """2-4,6-8
 2-6,4-8"""
 
 
-def interesting(s):
+def cover(s):
     [a,  b] = s.split(',')
     aa = [int(x) for x in a.split('-')]
     bb = [int(x) for x in b.split('-')]
@@ -19,20 +19,19 @@ def interesting(s):
     return result
 
 
-def sizeit(s):
+def overlap(s):
     [a,  b] = s.split(',')
     aa = [int(x) for x in a.split('-')]
     bb = [int(x) for x in b.split('-')]
-    overlap = [x for x in set.intersection(set(range(aa[0], aa[1] + 1)), set(range(bb[0], bb[1] + 1)))]
-    return len(overlap)
+    return not set.isdisjoint(set(range(aa[0], aa[1] + 1)), set(range(bb[0], bb[1] + 1)))
 
 
 def part1(inp):
-    return sum([1 if interesting(ln) else 0 for ln in inp.splitlines()])
+    return sum([1 if cover(ln) else 0 for ln in inp.splitlines()])
 
 
 def part2(inp):
-    return sum([1 if sizeit(ln) else 0 for ln in inp.splitlines()])
+    return sum([1 if overlap(ln) else 0 for ln in inp.splitlines()])
 
 
 def sanity1():
@@ -48,6 +47,3 @@ print("Part 1:", part1(task))
 
 sanity2()
 print("Part 2:", part2(task))
-
-
-
