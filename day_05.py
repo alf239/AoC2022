@@ -12,9 +12,16 @@ move 2 from 2 to 1
 move 1 from 1 to 2"""
 
 
-def parse(all):
-    [a, b] = all.split("\n\n")
-    commands = b.splitlines()
+def parse_command(s):
+    [_, nr, _, fr, _, to] = s.split(" ")
+    f = int(fr) - 1
+    t = int(to) - 1
+    n = int(nr)
+    return n, f, t
+
+
+def parse(inp):
+    [a, b] = inp.split("\n\n")
     at = list(reversed(a.splitlines()))
     size = (len(at[0]) + 2) // 4
     stacks = [[] for _ in range(size)]
@@ -23,34 +30,29 @@ def parse(all):
             idx = i * 4 + 1
             if idx < len(s) and s[idx] != " ":
                 stacks[i].append(s[idx])
-    return stacks, commands
+    return stacks, [parse_command(s) for s in b.splitlines()]
+
+
+def read_output(stacks):
+    return "".join(s[-1] for s in stacks)
 
 
 def part1(inp):
     stacks, commands = parse(inp)
-    for cmd in commands:
-        if cmd != "":
-            [_, nr, _, fr, _, to] = cmd.split(" ")
-            f = int(fr) - 1
-            t = int(to) - 1
-            for i in range(int(nr)):
-                crate = stacks[f].pop()
-                stacks[t].append(crate)
-    return "".join(s[-1] for s in stacks)
+    for n, f, t in commands:
+        for i in range(int(n)):
+            crate = stacks[f].pop()
+            stacks[t].append(crate)
+    return read_output(stacks)
 
 
 def part2(inp):
     stacks, commands = parse(inp)
-    for cmd in commands:
-        if cmd != "":
-            [_, nr, _, fr, _, to] = cmd.split(" ")
-            f = int(fr) - 1
-            t = int(to) - 1
-            n = int(nr)
-            crates = stacks[f][-n:]
-            stacks[f] = stacks[f][:-n]
-            stacks[t].extend(crates)
-    return "".join(s[-1] for s in stacks)
+    for n, f, t in commands:
+        crates = stacks[f][-n:]
+        stacks[f] = stacks[f][:-n]
+        stacks[t].extend(crates)
+    return read_output(stacks)
 
 
 assert part1(example) == "CMZ"
