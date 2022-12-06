@@ -9,9 +9,9 @@ def all_diff(s):
 
 
 def part(s, n):
-    for i in range(len(s) - n):
-        if all_diff(s[i:i+n]):
-            return i + n
+    for i in range(n, len(s)):
+        if all_diff(s[i - n:i]):
+            return i
     return -1
 
 
