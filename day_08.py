@@ -8,31 +8,6 @@ example = """30373
 35390"""
 
 
-def visible(m, x, y):
-    t = m[x][y]
-    for i in range(0, x):
-        if m[i][y] >= t:
-            break
-    else:
-        return True
-    for i in range(x + 1, len(m)):
-        if m[i][y] >= t:
-            break
-    else:
-        return True
-    for i in range(0, y):
-        if m[x][i] >= t:
-            break
-    else:
-        return True
-    for i in range(y + 1, len(m[0])):
-        if m[x][i] >= t:
-            break
-    else:
-        return True
-    return False
-
-
 def parse(ss):
     return [[int(c) for c in s] for s in ss.splitlines()]
 
@@ -47,6 +22,27 @@ def height(m, x, y):
     if x >= len(m):
         return -1
     return m[x][y]
+
+
+def can_see(m, x, y, dx, dy):
+    me = height(m, x, y)
+    for i in range(1, len(m) + 1):
+        h = height(m, x + i * dx, y + i * dy)
+        if h == -1:
+            return True
+        if h >= me:
+            return False
+    else:
+        raise Exception("Fallen off the cliff!")
+
+
+def visible(m, x, y):
+    return (
+        can_see(m, x, y, -1, 0) or
+        can_see(m, x, y, 1, 0) or
+        can_see(m, x, y, 0, -1) or
+        can_see(m, x, y, 0, 1)
+    )
 
 
 def score(m, x, y, dx, dy):
