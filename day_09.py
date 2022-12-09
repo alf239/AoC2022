@@ -9,6 +9,14 @@ R 4
 D 1
 L 5
 R 2"""
+example2 = """R 5
+U 8
+L 8
+D 3
+R 17
+D 10
+L 25
+U 20"""
 
 
 def parse(ss):
@@ -74,7 +82,6 @@ def part2(s):
     trail = set()
     trail.add(rope[-1])
     for c, n in cs:
-        print(c, n)
         for i in range(n):
             rope[0] = move(c, rope[0])
             for j in range(1, len(rope)):
@@ -87,5 +94,5 @@ def part2(s):
 assert part1(example) == 13
 print("Part 1:", part1(task))
 
-# assert part2(example) == 36
+assert part2(example2) == 36
 print("Part 2:", part2(task))
