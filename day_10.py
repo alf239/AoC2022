@@ -183,8 +183,10 @@ def part1(s):
     return signal
 
 
-def check_signal2(sprite, pc):
-    return sprite <= pc % 40 < (sprite + 3)
+def tick(pc, x, crt):
+    if x <= pc % 40 < (x + 3):
+        crt.add(pc)
+    return pc + 1
 
 
 def part2(s):
@@ -194,16 +196,10 @@ def part2(s):
     crt = set()
     for cmd in cmds:
         if len(cmd) == 1:
-            if check_signal2(x, pc):
-                crt.add(pc)
-            pc += 1
+            pc = tick(pc, x, crt)
         if len(cmd) == 2:
-            if check_signal2(x, pc):
-                crt.add(pc)
-            pc += 1
-            if check_signal2(x, pc):
-                crt.add(pc)
-            pc += 1
+            pc = tick(pc, x, crt)
+            pc = tick(pc, x, crt)
             x += int(cmd[1])
     return crt
 
