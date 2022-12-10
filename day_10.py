@@ -158,7 +158,7 @@ def parse(ss):
 
 def check_signal(x, pc):
     if (pc - 20) % 40 == 0:
-        print(pc, x, pc * x)
+        # print(pc, x, pc * x)
         return pc * x
     return 0
 
@@ -169,7 +169,7 @@ def part1(s):
     x = 1
     signal = 0
     for cmd in cmds:
-        print(pc, x, cmd)
+        # print(pc, x, cmd)
         if len(cmd) == 1:
             pc += 1
             signal += check_signal(x, pc)
@@ -179,7 +179,7 @@ def part1(s):
             pc += 1
             x += int(cmd[1])
             signal += check_signal(x, pc)
-    print(pc, x, "DONE")
+    # print(pc, x, "DONE")
     return signal
 
 
