@@ -30,38 +30,8 @@ Monkey 3:
     If false: throw to monkey 1"""
 
 
-def parse(ss):
-    return [s.split(" ") for s in ss.splitlines()]
-
-
-def part1(s):
-    monkeys = full_parse(s)
-
-    for i in range(20):
-        for m in monkeys:
-            for item in m["Items"]:
-                m["Turns"] = m["Turns"] + 1
-                worry = eval(m["Op"], {}, {"old": item}) // 3
-                # print(f"Monkey {m['Nr']} inspected item {item} -> worry level {worry}")
-                target = str((worry % m["Test"]) == 0)
-                target_ = m[target]
-                # print(f"    throws to {target_}")
-                pass_to = monkeys[target_]
-                pass_to["Items"].append(worry)
-            m["Items"] = []
-        print(f"Round {i + 1}")
-        for m in monkeys:
-            print(f"Monkey {m['Nr']}: {', '.join(str(x) for x in m['Items'])}")
-        print()
-
-    activity = [mn["Turns"] for mn in monkeys]
-    activity.sort(reverse=True)
-
-    return activity[0] * activity[1]
-
-
-def full_parse(s):
-    cmds = parse(s)
+def parse(s):
+    cmds = [s1.split(" ") for s1 in s.splitlines()]
     monkeys = []
     monkey = {}
     i = 0
@@ -86,8 +56,30 @@ def full_parse(s):
     return monkeys
 
 
+def monkey_business(monkeys):
+    activity = [mn["Turns"] for mn in monkeys]
+    activity.sort(reverse=True)
+    return activity[0] * activity[1]
+
+
+def part1(s):
+    monkeys = parse(s)
+
+    for i in range(20):
+        for m in monkeys:
+            for item in m["Items"]:
+                m["Turns"] = m["Turns"] + 1
+                worry = eval(m["Op"], {}, {"old": item}) // 3
+                target = m[str((worry % m["Test"]) == 0)]
+                pass_to = monkeys[target]
+                pass_to["Items"].append(worry)
+            m["Items"] = []
+
+    return monkey_business(monkeys)
+
+
 def part2(s):
-    monkeys = full_parse(s)
+    monkeys = parse(s)
     modulo = 1
     for m in monkeys:
         modulo *= m["Test"]
@@ -97,18 +89,12 @@ def part2(s):
             for item in m["Items"]:
                 m["Turns"] = m["Turns"] + 1
                 worry = eval(m["Op"], {}, {"old": item}) % modulo
-                # print(f"Monkey {m['Nr']} inspected item {item} -> worry level {worry}")
-                target = str((worry % m["Test"]) == 0)
-                target_ = m[target]
-                # print(f"    throws to {target_}")
-                pass_to = monkeys[target_]
+                target = m[str((worry % m["Test"]) == 0)]
+                pass_to = monkeys[target]
                 pass_to["Items"].append(worry)
             m["Items"] = []
 
-    activity = [mn["Turns"] for mn in monkeys]
-    activity.sort(reverse=True)
-
-    return activity[0] * activity[1]
+    return monkey_business(monkeys)
 
 
 assert part1(example) == 10605
