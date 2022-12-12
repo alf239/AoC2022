@@ -1,5 +1,7 @@
 import aoc
-import queue
+
+DEBUG = False
+BARRIER = '|'
 
 task = aoc.get_input(12)
 example = """Sabqponm
@@ -10,13 +12,19 @@ abdefghi"""
 
 
 def read(m, x, y):
-    if x < 0: return '|'
-    if y < 0: return '|'
-    if x >= len(m[0]): return '|'
-    if y >= len(m): return '|'
+    if x < 0:
+        return BARRIER
+    if y < 0:
+        return BARRIER
+    if x >= len(m[0]):
+        return BARRIER
+    if y >= len(m):
+        return BARRIER
     signal = m[y][x]
-    if signal == 'S': return 'a'
-    if signal == 'E': return 'z'
+    if signal == 'S':
+        return 'a'
+    if signal == 'E':
+        return 'z'
     return signal
 
 
@@ -36,6 +44,18 @@ def finish(m):
     raise Exception("Cannot start")
 
 
+def show_path(m, visited):
+    if not DEBUG:
+        return
+    for y in range(len(m)):
+        for x in range(len(m[0])):
+            if (x, y) in visited:
+                print(f'{visited[(x, y)]:4d}', end="")
+            else:
+                print("    ", end="")
+        print()
+
+
 def part1(ss):
     m = [[c for c in s] for s in ss.splitlines()]
     visited = {}
@@ -50,13 +70,7 @@ def part1(ss):
         visited[(x, y)] = cnt
         signal = read(m, x, y)
         if (x, y) == (xz, yz):
-            # for y in range(len(m)):
-            #     for x in range(len(m[0])):
-            #         if (x, y) in visited:
-            #             print(f'{visited[(x, y)]:3d}', end="")
-            #         else:
-            #             print("   ", end="")
-            #     print()
+            show_path(m, visited)
             return cnt
         if signal == 'S':
             signal = 'a'
@@ -86,13 +100,7 @@ def part2(ss):
         visited[(x, y)] = cnt
         signal = read(m, x, y)
         if signal == 'a':
-            # for y in range(len(m)):
-            #     for x in range(len(m[0])):
-            #         if (x, y) in visited:
-            #             print(f'{visited[(x, y)]:3d}', end="")
-            #         else:
-            #             print("   ", end="")
-            #     print()
+            show_path(m, visited)
             return cnt
         if signal == 'S':
             signal = 'a'
