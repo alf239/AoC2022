@@ -56,12 +56,14 @@ def show_path(m, visited):
         print()
 
 
-def part1(ss):
+def parse(ss):
     m = [[c for c in s] for s in ss.splitlines()]
+    return m
+
+
+def dijkstra(m, x0, y0, done, consider):
     visited = {}
     work = []
-    x0, y0 = start(m)
-    xz, yz = finish(m)
     work[:0] = [(x0, y0, 0)]
     while work:
         x, y, cnt = work.pop()
@@ -69,52 +71,41 @@ def part1(ss):
             continue
         visited[(x, y)] = cnt
         signal = read(m, x, y)
-        if (x, y) == (xz, yz):
+        if done(x, y):
             show_path(m, visited)
             return cnt
         if signal == 'S':
             signal = 'a'
         step = cnt + 1
-        if ord(read(m, x + 1, y)) <= ord(signal) + 1:
+        if consider(x + 1, y, signal):
             work[:0] = [(x + 1, y, step)]
-        if ord(read(m, x - 1, y)) <= ord(signal) + 1:
+        if consider(x - 1, y, signal):
             work[:0] = [(x - 1, y, step)]
-        if ord(read(m, x, y + 1)) <= ord(signal) + 1:
+        if consider(x, y + 1, signal):
             work[:0] = [(x, y + 1, step)]
-        if ord(read(m, x, y - 1)) <= ord(signal) + 1:
+        if consider(x, y - 1, signal):
             work[:0] = [(x, y - 1, step)]
 
     raise Exception("Out of work, no cigar")
+
+
+def part1(ss):
+    m = parse(ss)
+    x0, y0 = start(m)
+    xz, yz = finish(m)
+    return dijkstra(m, x0, y0,
+                    lambda x, y: (x, y) == (xz, yz),
+                    lambda x, y, signal: ord(read(m, x, y)) <= ord(signal) + 1
+                    )
 
 
 def part2(ss):
     m = [[c for c in s] for s in ss.splitlines()]
-    visited = {}
-    work = []
     x0, y0 = finish(m)
-    work[:0] = [(x0, y0, 0)]
-    while work:
-        x, y, cnt = work.pop()
-        if (x, y) in visited:
-            continue
-        visited[(x, y)] = cnt
-        signal = read(m, x, y)
-        if signal == 'a':
-            show_path(m, visited)
-            return cnt
-        if signal == 'S':
-            signal = 'a'
-        step = cnt + 1
-        if ord(read(m, x + 1, y)) >= ord(signal) - 1:
-            work[:0] = [(x + 1, y, step)]
-        if ord(read(m, x - 1, y)) >= ord(signal) - 1:
-            work[:0] = [(x - 1, y, step)]
-        if ord(read(m, x, y + 1)) >= ord(signal) - 1:
-            work[:0] = [(x, y + 1, step)]
-        if ord(read(m, x, y - 1)) >= ord(signal) - 1:
-            work[:0] = [(x, y - 1, step)]
-
-    raise Exception("Out of work, no cigar")
+    return dijkstra(m, x0, y0,
+                    lambda x, y: read(m, x, y) == 'a',
+                    lambda x, y, signal: ord(read(m, x, y)) >= ord(signal) - 1
+                    )
 
 
 assert part1(example) == 31
