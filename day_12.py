@@ -1,4 +1,5 @@
 import aoc
+import collections
 
 DEBUG = False
 BARRIER = '|'
@@ -63,8 +64,8 @@ def parse(ss):
 
 def dijkstra(m, x0, y0, done, consider):
     visited = {}
-    work = []
-    work[:0] = [(x0, y0, 0)]
+    work = collections.deque()
+    work.appendleft((x0, y0, 0))
     while work:
         x, y, cnt = work.pop()
         if (x, y) in visited:
@@ -78,13 +79,13 @@ def dijkstra(m, x0, y0, done, consider):
             signal = 'a'
         step = cnt + 1
         if consider(x + 1, y, signal):
-            work[:0] = [(x + 1, y, step)]
+            work.appendleft((x + 1, y, step))
         if consider(x - 1, y, signal):
-            work[:0] = [(x - 1, y, step)]
+            work.appendleft((x - 1, y, step))
         if consider(x, y + 1, signal):
-            work[:0] = [(x, y + 1, step)]
+            work.appendleft((x, y + 1, step))
         if consider(x, y - 1, signal):
-            work[:0] = [(x, y - 1, step)]
+            work.appendleft((x, y - 1, step))
 
     raise Exception("Out of work, no cigar")
 
