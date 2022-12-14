@@ -21,7 +21,7 @@ def parse_dot(dot):
     return x, y
 
 
-def part1(inp):
+def parse_map(inp):
     m = {}
     for line in inp.splitlines():
         dots = line.split(" -> ")
@@ -36,6 +36,11 @@ def part1(inp):
                 x += dx
                 y += dy
                 m[(x, y)] = "#"
+    return m
+
+
+def part1(inp):
+    m = parse_map(inp)
 
     void = max(y for _, y in m) + 1
 
@@ -63,20 +68,7 @@ def part1(inp):
 
 
 def part2(inp):
-    m = {}
-    for line in inp.splitlines():
-        dots = line.split(" -> ")
-        dot = dots[0]
-        x, y = parse_dot(dot)
-        m[(x, y)] = "#"
-        for dot in dots[1:]:
-            xt, yt = parse_dot(dot)
-            dx = sign(xt - x)
-            dy = sign(yt - y)
-            while x != xt or y != yt:
-                x += dx
-                y += dy
-                m[(x, y)] = "#"
+    m = parse_map(inp)
 
     floor = max(y for _, y in m) + 2
 
