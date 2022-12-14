@@ -39,6 +39,16 @@ def parse_map(inp):
     return m
 
 
+def fall(x, y, m):
+    if (x, y + 1) not in m:
+        return True, x, y + 1
+    if (x - 1, y + 1) not in m:
+        return True, x - 1, y + 1
+    if (x + 1, y + 1) not in m:
+        return True, x + 1, y + 1
+    return False, x, y
+
+
 def part1(inp):
     m = parse_map(inp)
 
@@ -47,20 +57,12 @@ def part1(inp):
     while True:
         x, y = 500, 0
         while y < void:
-            if (x, y + 1) not in m:
-                y += 1
-                continue
-            if (x - 1, y + 1) not in m:
-                y += 1
-                x -= 1
-                continue
-            if (x + 1, y + 1) not in m:
-                y += 1
-                x += 1
-                continue
-            m[(x, y)] = "o"
-            break
-
+            fell, nx, ny = fall(x, y, m)
+            if not fell:
+                m[(x, y)] = "o"
+                break
+            x = nx
+            y = ny
         else:
             break
 
@@ -78,19 +80,12 @@ def part2(inp):
             if y + 1 == floor:
                 m[(x, y)] = "o"
                 break
-            if (x, y + 1) not in m:
-                y += 1
-                continue
-            if (x - 1, y + 1) not in m:
-                y += 1
-                x -= 1
-                continue
-            if (x + 1, y + 1) not in m:
-                y += 1
-                x += 1
-                continue
-            m[(x, y)] = "o"
-            break
+            fell, nx, ny = fall(x, y, m)
+            if not fell:
+                m[(x, y)] = "o"
+                break
+            x = nx
+            y = ny
 
     return len(list(c for c in m if m[c] == 'o'))
 
