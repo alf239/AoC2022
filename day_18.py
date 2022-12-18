@@ -18,17 +18,18 @@ example = """2,2,2
 2,3,5"""
 
 
+def neighbours(x, y, z):
+    return [(x + 1, y, z), (x - 1, y, z), (x, y + 1, z), (x, y - 1, z), (x, y, z + 1), (x, y, z - 1)]
+
+
 def part1(inp):
     cubes1 = [[int(x) for x in s.split(",")] for s in inp.splitlines()]
     cubes = set((x[0], x[1], x[2]) for x in cubes1)
     i = 0
     for x, y, z in cubes:
-        if (x + 1, y, z) not in cubes: i += 1
-        if (x - 1, y, z) not in cubes: i += 1
-        if (x, y + 1, z) not in cubes: i += 1
-        if (x, y - 1, z) not in cubes: i += 1
-        if (x, y, z + 1) not in cubes: i += 1
-        if (x, y, z - 1) not in cubes: i += 1
+        for x1, y1, z1 in neighbours(x, y, z):
+            if (x1, y1, z1) not in cubes:
+                i += 1
     return i
 
 
@@ -36,23 +37,16 @@ def is_free(x, y, z, cubes, cavity):
     seen = set()
     work = deque()
     x0, y0, z0 = x, y, z
-    work.append((0, x, y, z))
-    maxi = 0
+    work.append((x, y, z))
     while work:
-        i, x, y, z = work.pop()
-        if i > maxi: maxi = i
+        x, y, z = work.pop()
         if (x, y, z) in cubes: continue
         if (x, y, z) in cavity: return False
         if (x, y, z) in seen: continue
         seen.add((x, y, z))
-        if (x + 1, y, z) not in cubes: work.append((i + 1, x + 1, y, z))
-        if (x - 1, y, z) not in cubes: work.append((i + 1, x - 1, y, z))
-        if (x, y + 1, z) not in cubes: work.append((i + 1, x, y + 1, z))
-        if (x, y - 1, z) not in cubes: work.append((i + 1, x, y - 1, z))
-        if (x, y, z + 1) not in cubes: work.append((i + 1, x, y, z + 1))
-        if (x, y, z - 1) not in cubes: work.append((i + 1, x, y, z - 1))
-        if abs(x - x0) + abs(y - y0) + abs(z - z0) > 50:
+        if abs(x - x0) + abs(y - y0) + abs(z - z0) > 60:
             return True
+        work.extend(neighbours(x, y, z))
 
     cavity.update(seen)
     return False
@@ -64,12 +58,9 @@ def part2(inp):
     cubes = set((x[0], x[1], x[2]) for x in cubes1)
     i = 0
     for x, y, z in cubes:
-        if is_free(x + 1, y, z, cubes, cavity): i += 1
-        if is_free(x - 1, y, z, cubes, cavity): i += 1
-        if is_free(x, y + 1, z, cubes, cavity): i += 1
-        if is_free(x, y - 1, z, cubes, cavity): i += 1
-        if is_free(x, y, z + 1, cubes, cavity): i += 1
-        if is_free(x, y, z - 1, cubes, cavity): i += 1
+        for x1, y1, z1 in neighbours(x, y, z):
+            if is_free(x1, y1, z1, cubes, cavity):
+                i += 1
     return i
 
 
