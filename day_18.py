@@ -38,7 +38,7 @@ def part1(inp):
     return i
 
 
-def is_free(x, y, z, cubes, cavity):
+def is_outside(x, y, z, cubes, cavity):
     seen = set()
     work = deque()
     x0, y0, z0 = x, y, z
@@ -63,7 +63,7 @@ def part2(inp):
     i = 0
     for x, y, z in cubes:
         for x1, y1, z1 in neighbours(x, y, z):
-            if is_free(x1, y1, z1, cubes, cavity):
+            if is_outside(x1, y1, z1, cubes, cavity):
                 i += 1
     return i
 
