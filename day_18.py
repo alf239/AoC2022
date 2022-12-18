@@ -1,5 +1,5 @@
-import math
 from collections import deque
+
 import aoc
 
 task = aoc.get_input(18)
