@@ -18,13 +18,18 @@ example = """2,2,2
 2,3,5"""
 
 
+def parse_input(inp):
+    cubes1 = [[int(x) for x in s.split(",")] for s in inp.splitlines()]
+    cubes = set((x[0], x[1], x[2]) for x in cubes1)
+    return cubes
+
+
 def neighbours(x, y, z):
     return [(x + 1, y, z), (x - 1, y, z), (x, y + 1, z), (x, y - 1, z), (x, y, z + 1), (x, y, z - 1)]
 
 
 def part1(inp):
-    cubes1 = [[int(x) for x in s.split(",")] for s in inp.splitlines()]
-    cubes = set((x[0], x[1], x[2]) for x in cubes1)
+    cubes = parse_input(inp)
     i = 0
     for x, y, z in cubes:
         for x1, y1, z1 in neighbours(x, y, z):
@@ -53,9 +58,8 @@ def is_free(x, y, z, cubes, cavity):
 
 
 def part2(inp):
-    cubes1 = [[int(x) for x in s.split(",")] for s in inp.splitlines()]
+    cubes = parse_input(inp)
     cavity = set()
-    cubes = set((x[0], x[1], x[2]) for x in cubes1)
     i = 0
     for x, y, z in cubes:
         for x1, y1, z1 in neighbours(x, y, z):
