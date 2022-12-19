@@ -66,13 +66,14 @@ def max_geodes(bp, ore, ore_bots, clay, clay_bots, obsidian, obsidian_bots, t):
                            new_obsidian - bp.geode[1], obsidian_bots,
                            remaining_time))
     best = 0
-    if ore >= bp.ore:
+    if ore >= bp.obsidian[0] and clay >= bp.obsidian[1]:
         best = max(best,
                    max_geodes(bp,
-                              new_ore - bp.ore, ore_bots + 1,
-                              new_clay, clay_bots,
-                              new_obsidian, obsidian_bots,
+                              new_ore - bp.obsidian[0], ore_bots,
+                              new_clay - bp.obsidian[1], clay_bots,
+                              new_obsidian, obsidian_bots + 1,
                               remaining_time))
+
     if ore >= bp.clay:
         best = max(best,
                    max_geodes(bp,
@@ -81,12 +82,12 @@ def max_geodes(bp, ore, ore_bots, clay, clay_bots, obsidian, obsidian_bots, t):
                               new_obsidian, obsidian_bots,
                               remaining_time))
 
-    if ore >= bp.obsidian[0] and clay >= bp.obsidian[1]:
+    if ore >= bp.ore:
         best = max(best,
                    max_geodes(bp,
-                              new_ore - bp.obsidian[0], ore_bots,
-                              new_clay - bp.obsidian[1], clay_bots,
-                              new_obsidian, obsidian_bots + 1,
+                              new_ore - bp.ore, ore_bots + 1,
+                              new_clay, clay_bots,
+                              new_obsidian, obsidian_bots,
                               remaining_time))
 
     best = max(best, max_geodes(bp,
@@ -98,23 +99,26 @@ def max_geodes(bp, ore, ore_bots, clay, clay_bots, obsidian, obsidian_bots, t):
     return best
 
 
-def quality_level(bp):
-    return bp.id * max_geodes(bp, 0, 1, 0, 0, 0, 0, 24)
+def max_geodes_facade(bp, n):
+    return max_geodes(bp, 0, 1, 0, 0, 0, 0, n)
 
 
 def part1(inp):
     blueprints = parse_input(inp)
-    qs = [quality_level(bp) for bp in blueprints]
+    qs = [bp.id * max_geodes_facade(bp, 24) for bp in blueprints]
     print(qs)
     return sum(qs)
 
 
 def part2(inp):
-    return 2
+    blueprints = parse_input(inp)[:3]
+    qs = [max_geodes_facade(bp, 36) for bp in blueprints]
+    print(qs)
+    return sum(qs)
 
 
 # assert part1(example) == 33
-print("Part 1:", part1(task))
+# print("Part 1:", part1(task))
 
-assert part2(example) == 2
+# assert part2(example) == 62
 print("Part 2:", part2(task))
