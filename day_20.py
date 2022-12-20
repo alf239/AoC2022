@@ -33,16 +33,16 @@ def move(entry, next, prev, lookup):
 
 def read_result(nrs, next):
     n = len(nrs)  # == len(next)
-    point = nrs.index(0)
+    curr = nrs.index(0)
     for i in range(1000 % n):
-        point = next[point]
-    x1 = nrs[point]
+        curr = next[curr]
+    x1 = nrs[curr]
     for i in range(1000 % n):
-        point = next[point]
-    x2 = nrs[point]
+        curr = next[curr]
+    x2 = nrs[curr]
     for i in range(1000 % n):
-        point = next[point]
-    x3 = nrs[point]
+        curr = next[curr]
+    x3 = nrs[curr]
     return x1 + x2 + x3
 
 
