@@ -30,12 +30,11 @@ def move(entry, next, prev):
     if entry[1] > 0:
         for i in range(steps):
             a = next[a]
-            b = next[b]
     else:
         for i in range(steps):
             a = prev[a]
-            b = prev[b]
 
+    b = next[a]
     next[a] = entry
     next[entry] = b
     prev[b] = entry
