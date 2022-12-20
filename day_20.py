@@ -10,29 +10,19 @@ example = """1
 4"""
 
 
-def to_linked_list(xs):
-    n = len(xs)
-    next = {}
-    prev = {}
-    for i in range(n):
-        next[xs[i]] = xs[(i + 1) % n]
-        prev[xs[i]] = xs[(i + n - 1) % n]
-    return next, prev
+def doubly_linked_list(n):
+    return [(i + 1) % n for i in range(n)], [(i - 1) % n for i in range(n)]
 
 
-def move(entry, next, prev):
+def move(entry, next, prev, lookup):
     a = prev[entry]
     b = next[entry]
     next[a] = b
     prev[b] = a
 
-    steps = abs(entry[1]) % (len(next) - 1)
-    if entry[1] > 0:
-        for i in range(steps):
-            a = next[a]
-    else:
-        for i in range(steps):
-            a = prev[a]
+    steps = lookup[entry] % (len(next) - 1)
+    for i in range(steps):
+        a = next[a]
 
     b = next[a]
     next[a] = entry
@@ -41,50 +31,42 @@ def move(entry, next, prev):
     prev[entry] = a
 
 
-def read_result(entries, next):
-    n = len(entries)
-    for entry in entries:
-        if entry[1] == 0:
-            point = entry
-            break
-    else:
-        raise Exception("Cannot find the zero!")
+def read_result(nrs, next):
+    n = len(nrs)  # == len(next)
+    point = nrs.index(0)
     for i in range(1000 % n):
         point = next[point]
-    x1 = point[1]
+    x1 = nrs[point]
     for i in range(1000 % n):
         point = next[point]
-    x2 = point[1]
+    x2 = nrs[point]
     for i in range(1000 % n):
         point = next[point]
-    x3 = point[1]
-    result = x1 + x2 + x3
-    return result
+    x3 = nrs[point]
+    return x1 + x2 + x3
 
 
 def part1(inp):
     nrs = [int(s) for s in inp.splitlines()]
     n = len(nrs)
-    entries = [(i, nrs[i]) for i in range(n)]
 
-    next, prev = to_linked_list(entries)
-    for entry in entries:
-        move(entry, next, prev)
+    next, prev = doubly_linked_list(n)
+    for entry in range(n):
+        move(entry, next, prev, nrs)
 
-    return read_result(entries, next)
+    return read_result(nrs, next)
 
 
 def part2(inp):
-    nrs = [int(s) for s in inp.splitlines()]
+    nrs = [int(s) * 811589153 for s in inp.splitlines()]
     n = len(nrs)
-    entries = [(i, nrs[i] * 811589153) for i in range(n)]
 
-    next, prev = to_linked_list(entries)
+    next, prev = doubly_linked_list(n)
     for i in range(10):
-        for entry in entries:
-            move(entry, next, prev)
+        for entry in range(n):
+            move(entry, next, prev, nrs)
 
-    return read_result(entries, next)
+    return read_result(nrs, next)
 
 
 assert part1(example) == 3
