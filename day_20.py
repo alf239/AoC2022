@@ -10,17 +10,29 @@ example = """1
 4"""
 
 
+def to_linked_list(xs):
+    n = len(xs)
+    next = {}
+    prev = {}
+    for i in range(n):
+        next[xs[i]] = xs[(i + 1) % n]
+        prev[xs[i]] = xs[(i + n - 1) % n]
+    return next, prev
+
+
 def move(entry, next, prev):
     a = prev[entry]
     b = next[entry]
     next[a] = b
     prev[b] = a
 
-    for i in range(abs(entry[1]) % (len(next) - 1)):
-        if entry[1] > 0:
+    steps = abs(entry[1]) % (len(next) - 1)
+    if entry[1] > 0:
+        for i in range(steps):
             a = next[a]
             b = next[b]
-        else:
+    else:
+        for i in range(steps):
             a = prev[a]
             b = prev[b]
 
@@ -30,7 +42,8 @@ def move(entry, next, prev):
     prev[entry] = a
 
 
-def read_result(entries, n, next):
+def read_result(entries, next):
+    n = len(entries)
     for entry in entries:
         if entry[1] == 0:
             point = entry
@@ -55,17 +68,11 @@ def part1(inp):
     n = len(nrs)
     entries = [(i, nrs[i]) for i in range(n)]
 
-    next = {}
-    prev = {}
-    for i in range(len(nrs)):
-        next[entries[i]] = entries[(i + 1) % n]
-        prev[entries[i]] = entries[(i + n - 1) % n]
-
+    next, prev = to_linked_list(entries)
     for entry in entries:
         move(entry, next, prev)
 
-    result = read_result(entries, n, next)
-    return result
+    return read_result(entries, next)
 
 
 def part2(inp):
@@ -73,18 +80,12 @@ def part2(inp):
     n = len(nrs)
     entries = [(i, nrs[i] * 811589153) for i in range(n)]
 
-    next = {}
-    prev = {}
-    for i in range(len(nrs)):
-        next[entries[i]] = entries[(i + 1) % n]
-        prev[entries[i]] = entries[(i + n - 1) % n]
-
+    next, prev = to_linked_list(entries)
     for i in range(10):
         for entry in entries:
             move(entry, next, prev)
 
-    result = read_result(entries, n, next)
-    return result
+    return read_result(entries, next)
 
 
 assert part1(example) == 3
