@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import aoc
 
 task = aoc.get_input(15)
@@ -61,8 +63,8 @@ def part2(inp, n):
             else:
                 return x * 4000000 + y
             x += 1
-        if y % 100000 == 0:
-            print(y)
+        # if y % 100000 == 0:
+        #     print(y)
         y += 1
 
     raise Exception("Oh I cannot find anything!")

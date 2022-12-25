@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 def value(c):
     if c < 'a':
         return ord(c) - ord('A') + 27

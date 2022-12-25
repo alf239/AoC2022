@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 rounds = x.split("\n")
 score = {'A': 1, 'B': 2, 'C': 3, 'X': 1, 'Y': 2, 'Z': 3}
 

@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import dataclasses
 from collections import deque
 from typing import Tuple

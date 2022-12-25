@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import aoc
 from collections import deque
 from heapq import heappush, heappop
