@@ -33,46 +33,39 @@ def to_pentary(n):
     while n != 0:
         pentary.append(n % 5)
         n //= 5
-    pentary.reverse()
-    return ''.join(str(d) for d in pentary)
+    return pentary
 
 
 def pentary_sum(a, b):
-    da = [int(c) for c in a]
-    db = [int(c) for c in b]
-    da.reverse()
-    db.reverse()
     carry = 0
     result = []
-    for d1, d2 in zip_longest(da, db, fillvalue=0):
+    for d1, d2 in zip_longest(a, b, fillvalue=0):
         dd = d1 + d2 + carry
         carry = dd // 5
         dd %= 5
         result.append(dd)
     if carry > 0:
         result.append(carry)
-    result.reverse()
-    return ''.join(str(d) for d in result)
+    return result
 
 
 def pentary_sub(a, b):
-    da = [int(c) for c in a]
-    db = [int(c) for c in b]
-    da.reverse()
-    db.reverse()
     result = []
-    for d1, d2 in zip_longest(da, db, fillvalue=0):
+    for d1, d2 in zip_longest(a, b, fillvalue=0):
         dd = d1 - d2
         result.append(dd)
-    result.reverse()
-    return ''.join(DIGITS[d + 2] for d in result)
+    return result
+
+
+def render_snafu(a):
+    return ''.join(DIGITS[d + 2] for d in reversed(a))
 
 
 def to_snafu(d):
     pentary = to_pentary(d)
-    corrector = '2' * (len(pentary) - 1)
+    corrector = [2] * (len(pentary) - 1)
     adjusted = pentary_sum(pentary, corrector)
-    return pentary_sub(adjusted, corrector)
+    return render_snafu(pentary_sub(adjusted, corrector))
 
 
 def part1(inp):
