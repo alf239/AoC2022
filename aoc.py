@@ -9,7 +9,7 @@ def session_cookie():
 
 
 def local_cache(day: int):
-    return f"input_{day:02d}.txt"
+    return f"input/input_{day:02d}.txt"
 
 
 def read_input(day: int):
