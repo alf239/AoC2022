@@ -44,8 +44,7 @@ def pentary_sum(a, b):
     for d1, d2 in zip_longest(a, b, fillvalue=0):
         dd = d1 + d2 + carry
         carry = dd // 5
-        dd %= 5
-        result.append(dd)
+        result.append(dd % 5)
     if carry > 0:
         result.append(carry)
     return result
